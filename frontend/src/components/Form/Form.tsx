@@ -133,7 +133,7 @@ const PatientForm = () => {
         alignSelf="flex-start"
         backgroundColor="brand.900"
         rounded="full"
-        color="fg"
+        color="white"
         width="100%"
         marginTop={8}
         fontWeight="semibold"
