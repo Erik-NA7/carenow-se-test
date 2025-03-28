@@ -16,4 +16,4 @@ node_modules
 
 # Ignore built ts files
 dist/**/*
-
+src/db/db.sqlite
