@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { router as visitRouter } from './routes/visit';
+import { router as visitRouter } from '@/routes/visit';
 
 const app = express();
 

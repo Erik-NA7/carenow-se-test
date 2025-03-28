@@ -46,10 +46,10 @@ pnpm build
 or
 npm run build
 ```
-preview:
+start:
 ```
-pnpm preview
+pnpm start
 or
-npm run preview
+npm start
 // Run on default port 5000
 ```
