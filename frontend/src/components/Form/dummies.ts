@@ -12,6 +12,7 @@ export const medicationOptions = [
 ];
 
 export const treatMentOptions = [
+  "Medication",
   "Surgery",
   "Radiation Therapy",
   "Physiotherapy",

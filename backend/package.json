@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development nodemon",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
-    "tsc": "tsc"
+    "start": "node --experimental-sqlite dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -17,15 +16,18 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.13",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
   }
 }

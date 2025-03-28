@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { router as apiRouter } from './routes/api';
 import morgan from 'morgan';
+import { router as visitRouter } from './routes/visit';
 
 const app = express();
 
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 // Middleware
 app.use(cors({
@@ -15,11 +15,6 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-app.use('/api', apiRouter);
-
-// Health check
-app.get('/ping', (_req, res) => {
-  res.send('pong');
-});
+app.use('/api/visit', visitRouter);
 
 export { app };
