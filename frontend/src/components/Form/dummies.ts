@@ -1,3 +1,4 @@
+// Dummy data for Medications fields
 export const medicationOptions = [
     "Ibuprofen",
     "Acetaminophen",
@@ -11,6 +12,7 @@ export const medicationOptions = [
     "Losartan"
 ];
 
+// Dummy data for Treatments fields
 export const treatMentOptions = [
   "Medication",
   "Surgery",

@@ -1,13 +1,9 @@
-import { Toaster } from '@/components/ui/toaster'
-import PatientForm from '@/components/Form/Form'
+import { VisitForm } from './components/Form/VisitForm'
 import './App.css'
 
 function App() {
   return (
-    <>
-      <PatientForm />
-      {/* <Toaster /> */}
-    </>
+    <VisitForm />
   )
 }
 

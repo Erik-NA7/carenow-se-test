@@ -1,5 +1,6 @@
 import { defineConfig, createSystem, defaultConfig } from "@chakra-ui/react"
 
+// Create custom css and colors
 const config = defineConfig({
   globalCss: {
     body: {

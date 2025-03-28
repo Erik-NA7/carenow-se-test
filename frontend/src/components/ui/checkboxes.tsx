@@ -2,7 +2,9 @@ import {
     Menu,
     Portal,
 } from "@chakra-ui/react";
-import { Input } from "../ui/input";
+import { Input } from "./input";
+
+// Reusable closed Form Field Component for Multiple selection (checkboxes)
 
 interface MultipleSelectionProps {
     options: string[];
@@ -11,7 +13,9 @@ interface MultipleSelectionProps {
     onSelect?: (value: string[]) => void;
 }
 
-const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, name, value = [], onSelect }) => {
+export const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, name, value = [], onSelect }) => {
+    
+    // Handle check/uncheck
     const handleSelect = (option: string) => {
         const newValue = value.includes(option)
             ? value.filter((item) => item !== option)
@@ -19,6 +23,7 @@ const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, name, va
         onSelect?.(newValue);
     };
 
+    // Handle how the array of selected values is displayed
     const displayedItems = value.join(", ")
     
     return (
@@ -51,6 +56,5 @@ const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, name, va
             </Portal>
         </Menu.Root>
     );
-    };
+};
       
-export default MultipleSelection;

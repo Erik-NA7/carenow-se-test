@@ -5,9 +5,10 @@ import { router as visitRouter } from './routes/visit';
 
 const app = express();
 
+// Development logger
 app.use(morgan('dev'));
 
-// Middleware
+// CORS Middleware
 app.use(cors({
   origin: 'http://localhost:5173' // Your Vite frontend URL
 }));

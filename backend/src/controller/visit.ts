@@ -28,7 +28,7 @@ export const createVisit = async (req: Request, res: Response) => {
     // Send success reponse
     res.status(200).json({ success: true, message: 'Visit data saved'});
   } catch (error: unknown) {
-    console.error(error) // Shall use logging in production   
+    // Send error response
     res.status(500).json({ success: false, message: 'Failed to save data' });
   } finally {
     // Close connection
