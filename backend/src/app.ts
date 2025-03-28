@@ -10,7 +10,7 @@ app.use(morgan('dev'));
 
 // CORS Middleware
 app.use(cors({
-  origin: 'http://localhost:5173' // Your Vite frontend URL
+  origin: 'http://localhost:3000' // Vite frontend URL
 }));
 
 app.use(express.json());
