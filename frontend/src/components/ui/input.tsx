@@ -10,6 +10,7 @@ export const Input = (props: InputProps) => {
             overflow="hidden"
             textOverflow="ellipsis"
             {...props}
+            name={props.name}
         />
     )
 }

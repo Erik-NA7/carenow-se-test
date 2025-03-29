@@ -32,6 +32,7 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, n
                 <Input
                     value={displayedItems}
                     type="text"
+                    name={name}
                     readOnly
                 />
             </Menu.Trigger>

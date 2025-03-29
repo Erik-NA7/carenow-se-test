@@ -65,7 +65,7 @@ export const VisitForm = () => {
           required
           invalid={!!errors.name}
           errorText={errors.name?.message}
-          label="Patien Name"
+          label="Patient Name"
         >
           <Input
             type="text"
@@ -117,7 +117,8 @@ export const VisitForm = () => {
             render={({ field }) => (
               <MultipleSelection
                 options={medicationOptions}
-                name="medications"
+                // name="medications"
+                name={field.name}
                 value={field.value}
                 onSelect={field.onChange}
               />
