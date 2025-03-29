@@ -65,7 +65,7 @@ export const VisitForm = () => {
           required
           invalid={!!errors.name}
           errorText={errors.name?.message}
-          label="Patien Name"
+          label="Patient Name"
         >
           <Input
             type="text"
@@ -110,6 +110,7 @@ export const VisitForm = () => {
           invalid={!!errors.medications}
           errorText={errors.medications?.message}
           label="Medications"
+          htmlFor="medications"
         >
           <Controller
             name="medications"
@@ -117,6 +118,7 @@ export const VisitForm = () => {
             render={({ field }) => (
               <MultipleSelection
                 options={medicationOptions}
+                id="medications"
                 name="medications"
                 value={field.value}
                 onSelect={field.onChange}
@@ -131,6 +133,7 @@ export const VisitForm = () => {
           invalid={!!errors.treatments}
           errorText={errors.treatments?.message}
           label="Treatments"
+          htmlFor="treatments"
         >
           <Controller
             name="treatments"
@@ -138,8 +141,9 @@ export const VisitForm = () => {
             render={({ field }) => (
               <MultipleSelection
                 options={treatMentOptions}
+                id="treatments"
                 name="treatments"
-                value={field.value || []}
+                value={field.value}
                 onSelect={field.onChange}
               />
             )}

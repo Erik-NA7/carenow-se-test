@@ -8,12 +8,19 @@ import { Input } from "./input";
 
 interface MultipleSelectionProps {
     options: string[];
+    id: string;
     name: string;
-    value?: string[];
-    onSelect?: (value: string[]) => void;
+    value: string[];
+    onSelect: (value: string[]) => void;
 }
 
-export const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, name, value = [], onSelect }) => {
+export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
+    options,
+    id,
+    name,
+    value,
+    onSelect,
+}) => {
     
     // Handle check/uncheck
     const handleSelect = (option: string) => {
@@ -30,6 +37,8 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({ options, n
         <Menu.Root closeOnSelect={false} variant="solid" positioning={{ placement: "bottom" }}>
             <Menu.Trigger asChild>
                 <Input
+                    id={id}
+                    name={name}
                     value={displayedItems}
                     type="text"
                     readOnly
