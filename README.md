@@ -53,8 +53,9 @@ or
 npm start
 // Run on default port 5000
 ```
-test:
+### Front End test:
 ```
+cd frontend
 pnpm test
 or
 npm run test
