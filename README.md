@@ -53,3 +53,10 @@ or
 npm start
 // Run on default port 5000
 ```
+test:
+```
+pnpm test
+or
+npm run test
+// using vitest
+```
