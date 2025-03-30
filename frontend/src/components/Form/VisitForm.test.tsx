@@ -2,10 +2,8 @@ import { VisitForm as Form } from "./VisitForm"
 import { Provider } from "../ui/provider"
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { renderHook } from "@testing-library/react"
 import { vi } from "vitest"
 import { medicationOptions, treatMentOptions } from "@/components/Form/dummies"
-import { useVisitForm } from "@/hooks/useVisitForm"
 import { createVisit } from "@/services/visit"
 import { toaster, Toaster } from '@/components/ui/toaster';
 
@@ -50,333 +48,328 @@ describe("VisitForm Component", () => {
   }
 
   // Render validation
-  // describe("Rendering", () => {
-  //   it("renders expected form fields", () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+  describe("Rendering", () => {
+    it("renders expected form fields", () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
   
-  //     expect(nameInput).toBeInTheDocument()
-  //     expect(idInput).toBeInTheDocument()
-  //     expect(dateInput).toBeInTheDocument()
-  //     expect(medicationsInput).toBeInTheDocument()
-  //     expect(treatmentsInput).toBeInTheDocument()
-  //     expect(costInput).toBeInTheDocument()
-  //     expect(submitButton).toBeInTheDocument()
-  //   })
+      expect(nameInput).toBeInTheDocument()
+      expect(idInput).toBeInTheDocument()
+      expect(dateInput).toBeInTheDocument()
+      expect(medicationsInput).toBeInTheDocument()
+      expect(treatmentsInput).toBeInTheDocument()
+      expect(costInput).toBeInTheDocument()
+      expect(submitButton).toBeInTheDocument()
+    })
 
-  //   // Medications selection/checkbox render
-  //   it("renders and trigger medications checkboxes", async () => {
-  //     const user = userEvent.setup()
+    // Medications selection/checkbox render
+    it("renders and trigger medications checkboxes", async () => {
+      const user = userEvent.setup()
 
-  //     renderForm()
+      renderForm()
     
-  //     // trigger the medications checkboxes
-  //     const trigger = screen.getByRole("textbox", { name: /medications/i })
-  //     await user.click(trigger)
+      // trigger the medications checkboxes
+      const trigger = screen.getByRole("textbox", { name: /medications/i })
+      await user.click(trigger)
 
-  //     // Verify that all checkboxes are rendered based on data source
-  //     const options = screen.getAllByRole("menuitemcheckbox")
+      // Verify that all checkboxes are rendered based on data source
+      const options = screen.getAllByRole("menuitemcheckbox")
       
-  //     medicationOptions.forEach(expectedItem => {
-  //       expect(options.find(option => 
-  //         option.textContent?.includes(expectedItem) || 
-  //         option.getAttribute("data-value") === expectedItem
-  //       )).toBeTruthy();
-  //     })
-  //   })
+      medicationOptions.forEach(expectedItem => {
+        expect(options.find(option => 
+          option.textContent?.includes(expectedItem) || 
+          option.getAttribute("data-value") === expectedItem
+        )).toBeTruthy();
+      })
+    })
 
-  //   // Treatments selection/checkbox render
-  //   it("renders and trigger medications checkboxes", async () => {
-  //     const user = userEvent.setup()
+    // Treatments selection/checkbox render
+    it("renders and trigger medications checkboxes", async () => {
+      const user = userEvent.setup()
 
-  //     renderForm()
+      renderForm()
     
-  //     // trigger the Treatments checkboxes
-  //     const trigger = screen.getByRole("textbox", { name: /treatments/i })
-  //     await user.click(trigger)
+      // trigger the Treatments checkboxes
+      const trigger = screen.getByRole("textbox", { name: /treatments/i })
+      await user.click(trigger)
 
-  //     // Verify that all checkboxes are rendered based on data source
-  //     const options = screen.getAllByRole("menuitemcheckbox")
+      // Verify that all checkboxes are rendered based on data source
+      const options = screen.getAllByRole("menuitemcheckbox")
       
-  //     treatMentOptions.forEach(expectedItem => {
-  //       expect(options.find(option => 
-  //         option.textContent?.includes(expectedItem) || 
-  //         option.getAttribute("data-value") === expectedItem
-  //       )).toBeTruthy();
-  //     })
-  //   })
-  // })
+      treatMentOptions.forEach(expectedItem => {
+        expect(options.find(option => 
+          option.textContent?.includes(expectedItem) || 
+          option.getAttribute("data-value") === expectedItem
+        )).toBeTruthy();
+      })
+    })
+  })
 
   // // Form field validation
-  // describe("Validation", () => {
-  //   // Empty form submit
-  //   it("displays error text when submitting empty form", async () => {
-  //     const {
-  //       submitButton
-  //     } = renderForm()
+  describe("Validation", () => {
+    // Empty form submit
+    it("displays error text when submitting empty form", async () => {
+      const {
+        submitButton
+      } = renderForm()
 
-  //     userEvent.click(submitButton)
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
-  //     expect(await screen.findByText(/patient id must be a positive number/i)).toBeInTheDocument()
-  //     expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
-  //     expect(await screen.findByText(/at least one medication is required/i)).toBeInTheDocument()
-  //     expect(await screen.findByText(/at least one treatment is required/i)).toBeInTheDocument()
-  //     expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
+      expect(await screen.findByText(/patient id must be a positive number/i)).toBeInTheDocument()
+      expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
+      expect(await screen.findByText(/at least one medication is required/i)).toBeInTheDocument()
+      expect(await screen.findByText(/at least one treatment is required/i)).toBeInTheDocument()
+      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+    })
 
-  //   // Invalid name
-  //   it("displays error message for invalid name", async () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+    // Invalid name
+    it("displays error message for invalid name", async () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
       
-  //     fireEvent.change(nameInput, { target: { value: "" } })
-  //     fireEvent.change(idInput, { target: { value: "123" } })
-  //     fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-  //     fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-  //     fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-  //     fireEvent.change(costInput, { target: { value: "invalid" } })
-  //     userEvent.click(submitButton)
+      fireEvent.change(nameInput, { target: { value: "" } })
+      fireEvent.change(idInput, { target: { value: "123" } })
+      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
+      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
+      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(costInput, { target: { value: "invalid" } })
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
+    })
 
-  //   // Invalid id
-  //   it("displays error message for invalid id", async () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+    // Invalid id
+    it("displays error message for invalid id", async () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
 
-  //     fireEvent.change(nameInput, { target: { value: "John Doe" } })
-  //     fireEvent.change(idInput, { target: { value: "0" } })
-  //     fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-  //     fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-  //     fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-  //     fireEvent.change(costInput, { target: { value: "invalid" } })
-  //     userEvent.click(submitButton)
+      fireEvent.change(nameInput, { target: { value: "John Doe" } })
+      fireEvent.change(idInput, { target: { value: "0" } })
+      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
+      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
+      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(costInput, { target: { value: "invalid" } })
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/patient Id must be a positive number/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/patient Id must be a positive number/i)).toBeInTheDocument()
+    })
 
-  //   // Invalid date
-  //   it("displays error message for invalid date", async () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+    // Invalid date
+    it("displays error message for invalid date", async () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
 
-  //     fireEvent.change(nameInput, { target: { value: "John Doe" } })
-  //     fireEvent.change(idInput, { target: { value: "123" } })
-  //     fireEvent.change(dateInput, { target: { value: "" } })
-  //     fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-  //     fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-  //     fireEvent.change(costInput, { target: { value: "invalid" } })
-  //     userEvent.click(submitButton)
+      fireEvent.change(nameInput, { target: { value: "John Doe" } })
+      fireEvent.change(idInput, { target: { value: "123" } })
+      fireEvent.change(dateInput, { target: { value: "" } })
+      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
+      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(costInput, { target: { value: "invalid" } })
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
+    })
     
-  //   // Invalid cost
-  //   it("displays error message for invalid cost", async () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+    // Invalid cost
+    it("displays error message for invalid cost", async () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
 
-  //     fireEvent.change(nameInput, { target: { value: "John Doe" } })
-  //     fireEvent.change(idInput, { target: { value: "123" } })
-  //     fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-  //     fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-  //     fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-  //     fireEvent.change(costInput, { target: { value: "invalid" } })
-  //     userEvent.click(submitButton)
+      fireEvent.change(nameInput, { target: { value: "John Doe" } })
+      fireEvent.change(idInput, { target: { value: "123" } })
+      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
+      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
+      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(costInput, { target: { value: "invalid" } })
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+    })
 
-  //   // Invalid Medications
-  //   it("displays error message for invalid medications", async () => {
-  //     const {
-  //       nameInput,
-  //       idInput,
-  //       dateInput,
-  //       medicationsInput,
-  //       treatmentsInput,
-  //       costInput,
-  //       submitButton
-  //     } = renderForm()
+    // Invalid Medications
+    it("displays error message for invalid medications", async () => {
+      const {
+        nameInput,
+        idInput,
+        dateInput,
+        medicationsInput,
+        treatmentsInput,
+        costInput,
+        submitButton
+      } = renderForm()
 
-  //     fireEvent.change(nameInput, { target: { value: "John Doe" } })
-  //     fireEvent.change(idInput, { target: { value: "123" } })
-  //     fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-  //     fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-  //     fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-  //     fireEvent.change(costInput, { target: { value: "invalid" } })
-  //     userEvent.click(submitButton)
+      fireEvent.change(nameInput, { target: { value: "John Doe" } })
+      fireEvent.change(idInput, { target: { value: "123" } })
+      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
+      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
+      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(costInput, { target: { value: "invalid" } })
+      userEvent.click(submitButton)
 
-  //     expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
-  //   })
+      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+    })
 
-  //   // Validate Medications selection/checkbox change (check/uncheck)
-  //   it("Change of medications selection must reflect change of input value", async () => {
-  //     const user = userEvent.setup()
+    // Validate Medications selection/checkbox change (check/uncheck)
+    it("Change of medications selection must reflect change of input value", async () => {
+      const user = userEvent.setup()
 
-  //     const inputTrigger = renderForm().medicationsInput as HTMLInputElement
+      const inputTrigger = renderForm().medicationsInput as HTMLInputElement
     
-  //     // trigger the medications checkboxes
-  //     await user.click(inputTrigger)
+      // trigger the medications checkboxes
+      await user.click(inputTrigger)
 
-  //     // All checkboxes are rendered based on data source
-  //     const options = screen.getAllByRole("menuitemcheckbox")
+      // All checkboxes are rendered based on data source
+      const options = screen.getAllByRole("menuitemcheckbox")
 
-  //     // All checkboxes should initially unchecked
-  //     options.forEach(option => {
-  //       expect(option).toHaveAttribute("aria-checked", "false");
-  //     });
+      // All checkboxes should initially unchecked
+      options.forEach(option => {
+        expect(option).toHaveAttribute("aria-checked", "false");
+      });
       
-  //     // Verify the medications input has the checked item value
-  //     const expectedValues = options.map(opt => opt.getAttribute("data-value"));
+      // Verify the medications input has the checked item value
+      const expectedValues = options.map(opt => opt.getAttribute("data-value"));
 
-  //     // Test checking each option
-  //     for (const [index, option] of options.entries()) {
+      // Test checking each option
+      for (const [index, option] of options.entries()) {
         
-  //       // Initially should be unchecked
-  //       expect(option).toHaveAttribute("aria-checked", "false");
+        // Initially should be unchecked
+        expect(option).toHaveAttribute("aria-checked", "false");
         
-  //       // Click the option
-  //       await user.click(option);
+        // Click the option
+        await user.click(option);
         
-  //       // Verify UI state
-  //       expect(option).toHaveAttribute("aria-checked", "true");
+        // Verify UI state
+        expect(option).toHaveAttribute("aria-checked", "true");
         
-  //       // Verify form value contains the selected value
-  //       const currentValue = inputTrigger.value;        
+        // Verify form value contains the selected value
+        const currentValue = inputTrigger.value;        
         
-  //       const selectedValue = expectedValues[index];
+        const selectedValue = expectedValues[index];
         
-  //       expect(currentValue.split(", ")).toContain(selectedValue);
-  //     }
+        expect(currentValue.split(", ")).toContain(selectedValue);
+      }
 
-  //     // Test unchecking each option
-  //     for (const [index, option] of options.entries()) {
-  //       // At this point should be checked
-  //       expect(option).toHaveAttribute("aria-checked", "true");
+      // Test unchecking each option
+      for (const [index, option] of options.entries()) {
+        // At this point should be checked
+        expect(option).toHaveAttribute("aria-checked", "true");
         
-  //       // Click the option
-  //       await user.click(option);
+        // Click the option
+        await user.click(option);
         
-  //       // Verify UI state
-  //       expect(option).toHaveAttribute("aria-checked", "false");
+        // Verify UI state
+        expect(option).toHaveAttribute("aria-checked", "false");
         
-  //       // Verify form value doesn"t contain the selected value
-  //       const currentValue = inputTrigger.value;        
+        // Verify form value doesn"t contain the selected value
+        const currentValue = inputTrigger.value;        
         
-  //       const selectedValue = expectedValues[index];
+        const selectedValue = expectedValues[index];
         
-  //       expect(currentValue.split(", ")).not.toContain(selectedValue);
-  //     }
-  //   })
+        expect(currentValue.split(", ")).not.toContain(selectedValue);
+      }
+    })
 
-  //   // Validate Treatments selection/checkbox change (check/uncheck)
-  //   it("Change of treatments selection must reflect change of input value", async () => {
-  //     const user = userEvent.setup()
+    // Validate Treatments selection/checkbox change (check/uncheck)
+    it("Change of treatments selection must reflect change of input value", async () => {
+      const user = userEvent.setup()
 
-  //     // trigger the treatments checkboxes
-  //     const inputTrigger = renderForm().treatmentsInput as HTMLInputElement
-  //     await user.click(inputTrigger)
+      // trigger the treatments checkboxes
+      const inputTrigger = renderForm().treatmentsInput as HTMLInputElement
+      await user.click(inputTrigger)
 
-  //     // All checkboxes are rendered based on data source
-  //     const options = screen.getAllByRole("menuitemcheckbox")
+      // All checkboxes are rendered based on data source
+      const options = screen.getAllByRole("menuitemcheckbox")
 
-  //     // All checkboxes should initially unchecked
-  //     options.forEach(option => {
-  //       expect(option).toHaveAttribute("aria-checked", "false");
-  //     });
+      // All checkboxes should initially unchecked
+      options.forEach(option => {
+        expect(option).toHaveAttribute("aria-checked", "false");
+      });
       
-  //     // Verify the treatments input has the checked item value
-  //     const expectedValues = options.map(opt => opt.getAttribute("data-value"));
+      // Verify the treatments input has the checked item value
+      const expectedValues = options.map(opt => opt.getAttribute("data-value"));
 
-  //     // Test checking each option
-  //     for (const [index, option] of options.entries()) {
+      // Test checking each option
+      for (const [index, option] of options.entries()) {
         
-  //       // Initially should be unchecked
-  //       expect(option).toHaveAttribute("aria-checked", "false");
+        // Initially should be unchecked
+        expect(option).toHaveAttribute("aria-checked", "false");
         
-  //       // Click the option
-  //       await user.click(option);
+        // Click the option
+        await user.click(option);
         
-  //       // Verify UI state
-  //       expect(option).toHaveAttribute("aria-checked", "true");
+        // Verify UI state
+        expect(option).toHaveAttribute("aria-checked", "true");
         
-  //       // Verify form value contains the selected value
-  //       const currentValue = inputTrigger.value;        
+        // Verify form value contains the selected value
+        const currentValue = inputTrigger.value;        
         
-  //       const selectedValue = expectedValues[index];
+        const selectedValue = expectedValues[index];
         
-  //       expect(currentValue.split(", ")).toContain(selectedValue);
-  //     }
+        expect(currentValue.split(", ")).toContain(selectedValue);
+      }
 
-  //     // Test unchecking each option
-  //     for (const [index, option] of options.entries()) {
-  //       // At this point should be checked
-  //       expect(option).toHaveAttribute("aria-checked", "true");
+      // Test unchecking each option
+      for (const [index, option] of options.entries()) {
+        // At this point should be checked
+        expect(option).toHaveAttribute("aria-checked", "true");
         
-  //       // Click the option
-  //       await user.click(option);
+        // Click the option
+        await user.click(option);
         
-  //       // Verify UI state
-  //       expect(option).toHaveAttribute("aria-checked", "false");
+        // Verify UI state
+        expect(option).toHaveAttribute("aria-checked", "false");
         
-  //       // Verify form value doesn"t contain the selected value
-  //       const currentValue = inputTrigger.value;        
+        // Verify form value doesn"t contain the selected value
+        const currentValue = inputTrigger.value;        
         
-  //       const selectedValue = expectedValues[index];
+        const selectedValue = expectedValues[index];
         
-  //       expect(currentValue.split(", ")).not.toContain(selectedValue);
-  //     }
-  //   })
-  // })
+        expect(currentValue.split(", ")).not.toContain(selectedValue);
+      }
+    })
+  })
 
   // Valid Form Submission
   describe("Form Submission", () => {
     it("submits the form with valid data", async () => {
       mockCreateVisit.mockResolvedValue({ success: true, message: "Visit data saved" });
       const user = userEvent.setup()
-      // const mockToaster = { create: vi.fn() };
-      
-      // vi.mock("../path/to/toaster", () => ({
-      //   toaster: mockToaster,
-      // }));
 
       const {
         nameInput,
@@ -439,6 +432,7 @@ describe("VisitForm Component", () => {
             treatments: ["Physiotherapy"],
             cost: 1000000
           })
+          
         )
       });
 
