@@ -116,16 +116,16 @@ export const VisitForm = () => {
             control={control}
             render={({ field }) => (
               <>
-              <Input
-                {...field}
-                display="none"
-              />
-              <MultipleSelection
-                options={medicationOptions}
-                name={field.name}
-                value={field.value}
-                onChange={field.onChange}
-              />
+                <Input
+                  {...field}
+                  display="none"
+                />
+                <MultipleSelection
+                  options={medicationOptions}
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               </>
             )}
           />

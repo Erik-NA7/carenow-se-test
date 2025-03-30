@@ -41,7 +41,9 @@ describe("VisitForm Component", () => {
       idInput: screen.getByLabelText(/patient id/i),
       dateInput: screen.getByLabelText(/date/i),
       medicationsInput: screen.getByLabelText(/medications/i),
+      medicationsTrigger: screen.getByTitle("medications-trigger"),
       treatmentsInput: screen.getByLabelText(/treatments/i),
+      treatmentsTrigger: screen.getByTitle("treatments-trigger"),
       costInput: screen.getByLabelText(/cost/i),
       submitButton: screen.getByRole("button", { name: /save/i })
     }
@@ -76,7 +78,7 @@ describe("VisitForm Component", () => {
       renderForm()
     
       // trigger the medications checkboxes
-      const trigger = screen.getByRole("textbox", { name: /medications/i })
+      const trigger = screen.getByTitle("medications-trigger")
       await user.click(trigger)
 
       // Verify that all checkboxes are rendered based on data source
@@ -97,7 +99,7 @@ describe("VisitForm Component", () => {
       renderForm()
     
       // trigger the Treatments checkboxes
-      const trigger = screen.getByRole("textbox", { name: /treatments/i })
+      const trigger = screen.getByTitle("treatments-trigger")
       await user.click(trigger)
 
       // Verify that all checkboxes are rendered based on data source
@@ -120,14 +122,15 @@ describe("VisitForm Component", () => {
         submitButton
       } = renderForm()
 
-      userEvent.click(submitButton)
+      const user = userEvent.setup()
+      await user.click(submitButton)
 
-      expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
-      expect(await screen.findByText(/patient id must be a positive number/i)).toBeInTheDocument()
-      expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
-      expect(await screen.findByText(/at least one medication is required/i)).toBeInTheDocument()
-      expect(await screen.findByText(/at least one treatment is required/i)).toBeInTheDocument()
-      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+      expect(screen.queryByText(/patient name is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/patient id must be a positive number/i)).toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).toBeInTheDocument()
     })
 
     // Invalid name
@@ -136,21 +139,40 @@ describe("VisitForm Component", () => {
         nameInput,
         idInput,
         dateInput,
-        medicationsInput,
-        treatmentsInput,
+        medicationsTrigger,
+        treatmentsTrigger,
         costInput,
         submitButton
       } = renderForm()
       
+      const user = userEvent.setup()
+
       fireEvent.change(nameInput, { target: { value: "" } })
       fireEvent.change(idInput, { target: { value: "123" } })
-      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-      fireEvent.change(costInput, { target: { value: "invalid" } })
-      userEvent.click(submitButton)
+      fireEvent.change(dateInput, { target: { value: "2025-03-30" } })
+      fireEvent.change(costInput, { target: { value: "1000" } })
+      await user.click(medicationsTrigger)
+      // Select Ibuprofen
+      const ibuprofen = screen.getByRole("menuitemcheckbox", { name: /ibuprofen/i})
+      await user.click(ibuprofen)
+      // close Medications checkboxes
+      await user.click(medicationsTrigger)
 
-      expect(await screen.findByText(/patient name is required/i)).toBeInTheDocument()
+      await user.click(treatmentsTrigger)
+      // Select Physiotherapy
+      const physiotherapy = screen.getByRole("menuitemcheckbox", { name: /physiotherapy/i})
+      await user.click(physiotherapy)
+      // close Treatments checkboxes
+      await user.click(treatmentsTrigger)  
+      
+      await user.click(submitButton)
+
+      expect(screen.queryByText(/patient name is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/patient id must be a positive number/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).not.toBeInTheDocument()
     })
 
     // Invalid id
@@ -159,44 +181,81 @@ describe("VisitForm Component", () => {
         nameInput,
         idInput,
         dateInput,
-        medicationsInput,
-        treatmentsInput,
+        medicationsTrigger,
+        treatmentsTrigger,
         costInput,
         submitButton
       } = renderForm()
 
+      const user = userEvent.setup()
+
       fireEvent.change(nameInput, { target: { value: "John Doe" } })
       fireEvent.change(idInput, { target: { value: "0" } })
-      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-      fireEvent.change(costInput, { target: { value: "invalid" } })
-      userEvent.click(submitButton)
+      fireEvent.change(dateInput, { target: { value: "2025-03-30" } })
+      fireEvent.change(costInput, { target: { value: "1000" } })
 
-      expect(await screen.findByText(/patient Id must be a positive number/i)).toBeInTheDocument()
-    })
+      await user.click(medicationsTrigger)
+      // Select Ibuprofen
+      const ibuprofen = screen.getByRole("menuitemcheckbox", { name: /ibuprofen/i})
+      await user.click(ibuprofen)
+      // close Medications checkboxes
+      await user.click(medicationsTrigger)
 
-    // Invalid date
+      await user.click(treatmentsTrigger)
+      // Select Physiotherapy
+      const physiotherapy = screen.getByRole("menuitemcheckbox", { name: /physiotherapy/i})
+      await user.click(physiotherapy)
+      // close Treatments checkboxes
+      await user.click(treatmentsTrigger)  
+      
+      await user.click(submitButton)
+
+      expect(screen.queryByText(/patient name is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/patient Id must be a positive number/i)).toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).not.toBeInTheDocument()})
+    
+      // Invalid date
     it("displays error message for invalid date", async () => {
       const {
         nameInput,
         idInput,
         dateInput,
-        medicationsInput,
-        treatmentsInput,
+        medicationsTrigger,
+        treatmentsTrigger,
         costInput,
         submitButton
       } = renderForm()
 
+      const user = userEvent.setup()
+      
       fireEvent.change(nameInput, { target: { value: "John Doe" } })
       fireEvent.change(idInput, { target: { value: "123" } })
       fireEvent.change(dateInput, { target: { value: "" } })
-      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-      fireEvent.change(costInput, { target: { value: "invalid" } })
-      userEvent.click(submitButton)
+      fireEvent.change(costInput, { target: { value: "1000" } })
+      await user.click(medicationsTrigger)
+      // Select Ibuprofen
+      const ibuprofen = screen.getByRole("menuitemcheckbox", { name: /ibuprofen/i})
+      await user.click(ibuprofen)
+      // close Medications checkboxes
+      await user.click(medicationsTrigger)
 
-      expect(await screen.findByText(/treatment date is required/i)).toBeInTheDocument()
+      await user.click(treatmentsTrigger)
+      // Select Physiotherapy
+      const physiotherapy = screen.getByRole("menuitemcheckbox", { name: /physiotherapy/i})
+      await user.click(physiotherapy)
+      // close Treatments checkboxes
+      await user.click(treatmentsTrigger)  
+      
+      await user.click(submitButton)
+      expect(screen.queryByText(/patient name is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/patient id must be a positive number/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).not.toBeInTheDocument()
     })
     
     // Invalid cost
@@ -205,21 +264,40 @@ describe("VisitForm Component", () => {
         nameInput,
         idInput,
         dateInput,
-        medicationsInput,
-        treatmentsInput,
+        medicationsTrigger,
+        treatmentsTrigger,
         costInput,
         submitButton
       } = renderForm()
 
+      const user = userEvent.setup()
+
       fireEvent.change(nameInput, { target: { value: "John Doe" } })
       fireEvent.change(idInput, { target: { value: "123" } })
-      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
+      fireEvent.change(dateInput, { target: { value: "2025-03-30" } })
       fireEvent.change(costInput, { target: { value: "invalid" } })
-      userEvent.click(submitButton)
+      await user.click(medicationsTrigger)
+      // Select Ibuprofen
+      const ibuprofen = screen.getByRole("menuitemcheckbox", { name: /ibuprofen/i})
+      await user.click(ibuprofen)
+      // close Medications checkboxes
+      await user.click(medicationsTrigger)
 
-      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+      await user.click(treatmentsTrigger)
+      // Select Physiotherapy
+      const physiotherapy = screen.getByRole("menuitemcheckbox", { name: /physiotherapy/i})
+      await user.click(physiotherapy)
+      // close Treatments checkboxes
+      await user.click(treatmentsTrigger)  
+      
+      await user.click(submitButton)
+
+      expect(screen.queryByText(/patient name is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/patient id must be a positive number/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).toBeInTheDocument()
     })
 
     // Invalid Medications
@@ -228,31 +306,43 @@ describe("VisitForm Component", () => {
         nameInput,
         idInput,
         dateInput,
-        medicationsInput,
-        treatmentsInput,
+        treatmentsTrigger,
         costInput,
         submitButton
       } = renderForm()
 
+      const user = userEvent.setup()
+      
       fireEvent.change(nameInput, { target: { value: "John Doe" } })
       fireEvent.change(idInput, { target: { value: "123" } })
-      fireEvent.change(dateInput, { target: { value: "2023-01-01" } })
-      fireEvent.change(medicationsInput, { target: { value: "Ibuprofen" } })
-      fireEvent.change(treatmentsInput, { target: { value: "Medication" } })
-      fireEvent.change(costInput, { target: { value: "invalid" } })
-      userEvent.click(submitButton)
-
-      expect(await screen.findByText(/cost must be a positive number/i)).toBeInTheDocument()
+      fireEvent.change(dateInput, { target: { value: "2025-03-30" } })
+      fireEvent.change(costInput, { target: { value: "1000000" } })
+      await user.click(treatmentsTrigger)
+      // Select Physiotherapy
+      const physiotherapy = screen.getByRole("menuitemcheckbox", { name: /physiotherapy/i})
+      await user.click(physiotherapy)
+      // close Treatments checkboxes
+      await user.click(treatmentsTrigger)  
+      await user.click(submitButton)
+      
+      expect(screen.queryByText(/patient name is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/patient id must be a positive number/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/treatment date is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/medication is required/i)).toBeInTheDocument()
+      expect(screen.queryByText(/treatment is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/cost must be a positive number/i)).not.toBeInTheDocument()
     })
 
     // Validate Medications selection/checkbox change (check/uncheck)
     it("Change of medications selection must reflect change of input value", async () => {
       const user = userEvent.setup()
 
-      const inputTrigger = renderForm().medicationsInput as HTMLInputElement
+      const { medicationsInput }= renderForm()
+
+      const trigger = screen.getByTitle("medications-trigger")
     
       // trigger the medications checkboxes
-      await user.click(inputTrigger)
+      await user.click(trigger)
 
       // All checkboxes are rendered based on data source
       const options = screen.getAllByRole("menuitemcheckbox")
@@ -278,11 +368,11 @@ describe("VisitForm Component", () => {
         expect(option).toHaveAttribute("aria-checked", "true");
         
         // Verify form value contains the selected value
-        const currentValue = inputTrigger.value;        
+        const currentValue = (medicationsInput as HTMLInputElement).value;        
         
         const selectedValue = expectedValues[index];
         
-        expect(currentValue.split(", ")).toContain(selectedValue);
+        expect(currentValue.split(",")).toContain(selectedValue);
       }
 
       // Test unchecking each option
@@ -297,21 +387,21 @@ describe("VisitForm Component", () => {
         expect(option).toHaveAttribute("aria-checked", "false");
         
         // Verify form value doesn"t contain the selected value
-        const currentValue = inputTrigger.value;        
+        const currentValue = (medicationsInput as HTMLInputElement).value;        
         
         const selectedValue = expectedValues[index];
         
-        expect(currentValue.split(", ")).not.toContain(selectedValue);
+        expect(currentValue.split(",")).not.toContain(selectedValue);
       }
     })
 
     // Validate Treatments selection/checkbox change (check/uncheck)
     it("Change of treatments selection must reflect change of input value", async () => {
       const user = userEvent.setup()
-
+      const { treatmentsInput } = renderForm()
       // trigger the treatments checkboxes
-      const inputTrigger = renderForm().treatmentsInput as HTMLInputElement
-      await user.click(inputTrigger)
+      const trigger = screen.getByTitle("treatments-trigger")
+      await user.click(trigger)
 
       // All checkboxes are rendered based on data source
       const options = screen.getAllByRole("menuitemcheckbox")
@@ -337,11 +427,11 @@ describe("VisitForm Component", () => {
         expect(option).toHaveAttribute("aria-checked", "true");
         
         // Verify form value contains the selected value
-        const currentValue = inputTrigger.value;        
+        const currentValue = (treatmentsInput as HTMLInputElement).value;        
         
         const selectedValue = expectedValues[index];
         
-        expect(currentValue.split(", ")).toContain(selectedValue);
+        expect(currentValue.split(",")).toContain(selectedValue);
       }
 
       // Test unchecking each option
@@ -356,7 +446,7 @@ describe("VisitForm Component", () => {
         expect(option).toHaveAttribute("aria-checked", "false");
         
         // Verify form value doesn"t contain the selected value
-        const currentValue = inputTrigger.value;        
+        const currentValue = (treatmentsInput as HTMLInputElement).value;        
         
         const selectedValue = expectedValues[index];
         
