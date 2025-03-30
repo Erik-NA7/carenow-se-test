@@ -1,4 +1,5 @@
 import {
+    Button,
     Menu,
     Portal,
 } from "@chakra-ui/react";
@@ -8,18 +9,16 @@ import { Input } from "./input";
 
 interface MultipleSelectionProps {
     options: string[];
-    id: string;
     name: string;
     value: string[];
-    onSelect: (value: string[]) => void;
+    onChange: (value: string[]) => void;
 }
 
 export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
     options,
-    id,
     name,
     value,
-    onSelect,
+    onChange,
 }) => {
     
     // Handle check/uncheck
@@ -27,7 +26,7 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
         const newValue = value.includes(option)
             ? value.filter((item) => item !== option)
             : [...value, option];
-        onSelect?.(newValue);
+        onChange(newValue);
     };
 
     // Handle how the array of selected values is displayed
@@ -35,18 +34,28 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
     
     return (
         <Menu.Root closeOnSelect={false} variant="solid" positioning={{ placement: "bottom" }}>
-            <Menu.Trigger asChild>
-                <Input
-                    id={id}
-                    name={name}
-                    value={displayedItems}
-                    type="text"
-                    readOnly
-                />
+            <Menu.Trigger asChild maxWidth={200}>
+                <Button
+                    display="block"
+                    borderColor="gray.300"
+                    background="transparent"
+                    color="inherit"
+                    focusRing="inside"
+                    focusRingColor="brand.300"
+                    focusRingOffset="1"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    width="full"
+                    textAlign="start"
+                    css={{ padding: "0 12px" }}
+                    title={`${name}-trigger`}
+                >
+                    {displayedItems}
+                </Button>
             </Menu.Trigger>
             <Portal>
                 <Menu.Positioner>
-                    <Menu.Content width={230}>
+                    <Menu.Content width={200}>
                         { options.map((option) => (
                             <Menu.CheckboxItem
                                 value={option}

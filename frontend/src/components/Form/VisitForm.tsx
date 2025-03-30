@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { MultipleSelection} from "@/components/ui/checkboxes"
 import { toaster, Toaster } from "@/components/ui/toaster"
 import { Controller, SubmitHandler } from "react-hook-form"
-import { usePatientForm } from "@/hooks/useVisitForm"
+import { useVisitForm } from "@/hooks/useVisitForm"
 import { medicationOptions, treatMentOptions } from "./dummies"
 import { createVisit } from "@/services/visit"
 import { VisitData } from "@/types/visit"
@@ -22,7 +22,7 @@ export const VisitForm = () => {
   const [ saving, setSaving ] = useState<boolean>(false)
 
   // Form hook
-  const { control, register, handleSubmit, errors } = usePatientForm()
+  const { control, register, handleSubmit, errors } = useVisitForm()
   
   // Form submit handler => api call
   const onSubmit: SubmitHandler<VisitData> = async (data: VisitData) => {
@@ -110,19 +110,23 @@ export const VisitForm = () => {
           invalid={!!errors.medications}
           errorText={errors.medications?.message}
           label="Medications"
-          htmlFor="medications"
         >
           <Controller
             name="medications"
             control={control}
             render={({ field }) => (
+              <>
+              <Input
+                {...field}
+                display="none"
+              />
               <MultipleSelection
                 options={medicationOptions}
-                id="medications"
-                name="medications"
+                name={field.name}
                 value={field.value}
-                onSelect={field.onChange}
+                onChange={field.onChange}
               />
+              </>
             )}
           />
         </Field>
@@ -133,19 +137,23 @@ export const VisitForm = () => {
           invalid={!!errors.treatments}
           errorText={errors.treatments?.message}
           label="Treatments"
-          htmlFor="treatments"
         >
           <Controller
             name="treatments"
             control={control}
             render={({ field }) => (
+              <>
+                <Input
+                  {...field}
+                  display="none"
+                />
               <MultipleSelection
                 options={treatMentOptions}
-                id="treatments"
-                name="treatments"
+                name={field.name}
                 value={field.value}
-                onSelect={field.onChange}
-              />
+                onChange={field.onChange}
+                />
+              </>
             )}
           />
         </Field>

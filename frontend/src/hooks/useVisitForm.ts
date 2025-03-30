@@ -2,13 +2,15 @@ import { VisitData } from '@/types/visit'
 import { useForm } from 'react-hook-form'
 
 // Form Hook
-export const usePatientForm = () => {
+export const useVisitForm = () => {
   const {
     control,
     register,
     handleSubmit,
     trigger,
     formState: { errors },
+    watch,
+    getValues,
   } = useForm<VisitData>({
     defaultValues: {
       patient_id: '',
@@ -55,5 +57,7 @@ export const usePatientForm = () => {
     handleSubmit,
     errors,
     trigger,
+    watch,
+    getValues
   }
 }
