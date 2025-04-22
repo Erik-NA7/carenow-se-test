@@ -22,7 +22,7 @@ export const VisitForm = () => {
   const [ saving, setSaving ] = useState<boolean>(false)
 
   // Form hook
-  const { control, register, handleSubmit, errors } = useVisitForm()
+  const { control, register, handleSubmit, errors, reset } = useVisitForm()
   
   // Form submit handler => api call
   const onSubmit: SubmitHandler<VisitData> = async (data: VisitData) => {
@@ -45,6 +45,7 @@ export const VisitForm = () => {
     } finally {
       // Deactivate loading
       setSaving(false)
+      reset()
     }
   }
 

@@ -11,6 +11,7 @@ export const useVisitForm = () => {
     formState: { errors },
     watch,
     getValues,
+    reset,
   } = useForm<VisitData>({
     defaultValues: {
       patient_id: '',
@@ -23,7 +24,7 @@ export const useVisitForm = () => {
     // Validations
     resolver: async (data) => {
       const errors: Record<string, { message: string }> = {}
-      if (!data.name) {
+      if (!data.name || /\d/.test(data.name)) {
         errors.name = { message: "Patient name is required" }
       }
         
@@ -58,6 +59,7 @@ export const useVisitForm = () => {
     errors,
     trigger,
     watch,
-    getValues
+    getValues,
+    reset
   }
 }
