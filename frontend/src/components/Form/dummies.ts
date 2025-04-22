@@ -13,7 +13,7 @@ export const medicationOptions = [
 ];
 
 // Dummy data for Treatments fields
-export const treatMentOptions = [
+export const treatmentOptions = [
   "Medication",
   "Surgery",
   "Radiation Therapy",
