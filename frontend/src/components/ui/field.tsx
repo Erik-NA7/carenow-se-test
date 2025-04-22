@@ -22,15 +22,14 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
         {...rest}
         gap={2}
         justifyContent="flex-start"
-        flex={1}
         orientation="horizontal"
         color="brand"
+        width="full"
       >
         {/* Field Label */}
         {label && (
           <ChakraField.Label
             fontSize="normal"
-            width={"max-content"}
             textWrap={"nowrap"}
             minWidth={100}
           >
@@ -39,10 +38,10 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           </ChakraField.Label>
         )}
         <Container
-          width="100%"
           position="relative"
           p="0"
           justifyContent="flex-start"
+          maxWidth={220}
         >
           {/* The actual input field */}
           {children}

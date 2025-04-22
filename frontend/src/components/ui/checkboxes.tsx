@@ -33,7 +33,8 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
     
     return (
         <Menu.Root closeOnSelect={false} variant="solid" positioning={{ placement: "bottom" }}>
-            <Menu.Trigger asChild>
+            <Menu.Trigger asChild
+            >
                 <Button
                     display="block"
                     borderColor="gray.300"
