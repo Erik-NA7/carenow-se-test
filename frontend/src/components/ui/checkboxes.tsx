@@ -3,7 +3,6 @@ import {
     Menu,
     Portal,
 } from "@chakra-ui/react";
-import { Input } from "./input";
 
 // Reusable closed Form Field Component for Multiple selection (checkboxes)
 
@@ -34,7 +33,7 @@ export const MultipleSelection: React.FC<MultipleSelectionProps> = ({
     
     return (
         <Menu.Root closeOnSelect={false} variant="solid" positioning={{ placement: "bottom" }}>
-            <Menu.Trigger asChild maxWidth={200}>
+            <Menu.Trigger asChild>
                 <Button
                     display="block"
                     borderColor="gray.300"

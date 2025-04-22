@@ -12,7 +12,7 @@ import { MultipleSelection} from "@/components/ui/checkboxes"
 import { toaster, Toaster } from "@/components/ui/toaster"
 import { Controller, SubmitHandler } from "react-hook-form"
 import { useVisitForm } from "@/hooks/useVisitForm"
-import { medicationOptions, treatMentOptions } from "./dummies"
+import { medicationOptions, treatmentOptions } from "./dummies"
 import { createVisit } from "@/services/visit"
 import { VisitData } from "@/types/visit"
 import { ToPayload } from "@/dtos/visit.dto"
@@ -148,7 +148,7 @@ export const VisitForm = () => {
                   display="none"
                 />
               <MultipleSelection
-                options={treatMentOptions}
+                options={treatmentOptions}
                 name={field.name}
                 value={field.value}
                 onChange={field.onChange}

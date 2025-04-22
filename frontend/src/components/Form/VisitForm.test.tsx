@@ -3,7 +3,7 @@ import { Provider } from "../ui/provider"
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { vi } from "vitest"
-import { medicationOptions, treatMentOptions } from "@/components/Form/dummies"
+import { medicationOptions, treatmentOptions } from "@/components/Form/dummies"
 import { createVisit } from "@/services/visit"
 import { toaster, Toaster } from '@/components/ui/toaster';
 
@@ -105,7 +105,7 @@ describe("VisitForm Component", () => {
       // Verify that all checkboxes are rendered based on data source
       const options = screen.getAllByRole("menuitemcheckbox")
       
-      treatMentOptions.forEach(expectedItem => {
+      treatmentOptions.forEach(expectedItem => {
         expect(options.find(option => 
           option.textContent?.includes(expectedItem) || 
           option.getAttribute("data-value") === expectedItem
