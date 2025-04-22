@@ -49,7 +49,7 @@ export const VisitForm = () => {
   }
 
   return (
-    <Fieldset.Root maxWidth="sm" bg="white" p={6} borderRadius={4}>
+    <Fieldset.Root bg="white" p={[3,4,6]} borderRadius={4}>
       <Stack gap={8} colorScheme="light">
         <Fieldset.Legend
           fontSize="2xl"
